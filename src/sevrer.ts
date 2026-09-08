@@ -8,8 +8,11 @@ import CityRouter from "./routers/CityRouter.ts";
 import RestaurantRouter from "./routers/RestaurnatRoutes.ts";
 import UserRoute from "./routers/UserRoute.ts";
 // import { CategoryRouter } from "./controllers/CategoryController.ts";
+import dotenv from 'dotenv';
+import AdddressRoutes from "./routers/AdddressRoutes.ts";
 import CategoryRouter from "./routers/CategoryRouter.ts";
 import itemRoutes from "./routers/itemRoutes.ts";
+import OrderRouter from "./routers/OrderRouter.ts";
 export class Server {
   public app: express.Application = express();
 
@@ -37,6 +40,11 @@ export class Server {
       console.log("database is connected");
     });
   }
+
+  dotenvConfigs(){
+    dotenv.config({path:'env'})
+  }
+
   configParser(){
     this.app.use(express.urlencoded({
       extended:true
@@ -52,6 +60,8 @@ export class Server {
     this.app.use("/api/restaurant", RestaurantRouter); 
     this.app.use("/api/category", CategoryRouter); 
     this.app.use("/api/items", itemRoutes); 
+    this.app.use("/api/address", AdddressRoutes); 
+    this.app.use("/api/order", OrderRouter); 
   }
 
   handle404(){

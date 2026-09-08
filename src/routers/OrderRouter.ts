@@ -1,7 +1,8 @@
 import { Router } from "express"
-import { CategoryController } from "../controllers/CategoryController"
+import { OrderController } from "../controllers/OrderController"
 import { GloabalMiddleware } from "../middleware/Gobalmiddleware"
-class categoryRoute{
+import { OrderValidater } from "../middleware/OrderValidater"
+class OrderRouter{
 public router:Router
 
 
@@ -15,10 +16,10 @@ public router:Router
     }
 
     getRoutes(){
-        this.router.get('/category',GloabalMiddleware.auth,CategoryController.getRestaurantCategories)
+        
     }
     postRoutes(){
-       
+        this.router.get('/placeorder',GloabalMiddleware.auth,OrderValidater.placeorder(),GloabalMiddleware.checkError,OrderController.placeOrder)
     }
     putRoutes(){
     }
@@ -30,4 +31,4 @@ public router:Router
 
 }
 
-export default new categoryRoute().router
+export default new OrderRouter().router

@@ -14,8 +14,12 @@ export class bannerController{
     static async addbanner(req:Request,res:Response,next:NextFunction){
         const path=req.file?.path
         try{
-          const data={
-            banner:path
+          let data={
+            banner:path,
+            restaurant_id:req.body.restaurant_id
+          }
+          if(req.body.restaurant_id){
+            data={...data,restaurant_id:req.body.restaurant_id}
           }
           const banner=await new bannerModel(data).save()
           res.send(banner)
