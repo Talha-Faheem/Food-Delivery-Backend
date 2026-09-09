@@ -47,9 +47,12 @@ export class UserController {
         email: users.email,
         type:users.type
       };
-      const token = Utils.JwtToken(payload);
+      const token = Utils.JwtToken(payload,payload.user_id);
+      const Refershtoken = Utils.JwtRefreshToken(payload,payload.user_id);
+
       res.json({
         token: token,
+        Refershtoken,
         user: users,
       });
       await Nodemailer.sendMail({
@@ -78,10 +81,12 @@ export class UserController {
         email: user.email,
         type:user.type
       };
-      const tokens = await Utils.JwtToken(payload);
+        const token = Utils.JwtToken(payload,payload.user_id);
+      const Refershtoken = Utils.JwtRefreshToken(payload,payload.user_id);
 
       res.json({
-        token: tokens,
+        token: token,
+        Refershtoken,
         user: user,
       });
     } catch (e) {
@@ -297,7 +302,7 @@ export class UserController {
           email:new_email,
           type:user.type
         }
-        const token=Utils.JwtToken(payload)
+        const token= await Utils.JwtToken(payload,payload.user_id)
         res.json({
           token:token,
           user:updateUser
@@ -307,6 +312,31 @@ export class UserController {
       next(e)
     }
 
+  }
+
+  static async getNewToken(req: Request, res: Response, next: NextFunction){
+    const refreshToken=req.body.resfreshToken
+    try{
+      const decoded_data=await Utils.jwtRefreshverify(refreshToken)
+      if(decoded_data){
+        const payload={
+          email:decoded_data.email,
+          type:decoded_data.type
+        }
+        const access_token=Utils.JwtToken(payload,decoded_data.aud)
+        const refresh_token=Utils.JwtRefreshToken(payload,decoded_data.aud)
+
+        res.json({
+          token:access_token,
+          refreshToken:refresh_token,
+        
+        })
+      }else{
+        throw('Access is forbidden')
+      }
+    }catch(e){
+      next(e)
+    }
   }
 }
 

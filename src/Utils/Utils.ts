@@ -64,13 +64,28 @@ export class Utils {
     });
   }
 
-  static JwtToken(payload: object) {
-    return jwt.sign(payload, "sercet key", { expiresIn: "180d" ,issuer:'helloG'});
+  static JwtToken(payload: object,user_id:any) {
+    return jwt.sign(payload, "sercet key", { expiresIn: "180d",audience:user_id.toString() ,issuer:'helloG'});
   }
 
   static jwtverify(token: string): Promise<any> {
     return new Promise((resolve, reject) => {
       jwt.verify(token, "sercet key", (err, decoded) => {
+        console.log(decoded)
+        if (err) reject(err);
+        else if(!decoded) {reject(new Error("user is not authorized"));
+        }
+        else resolve(decoded);
+      });
+    });
+  }
+  static JwtRefreshToken(payload: object,user_id:any) {
+    return jwt.sign(payload, "Refersh key", { expiresIn: "1y",audience:user_id.toString() ,issuer:'helloG'});
+  }
+
+  static jwtRefreshverify(token: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, "Refersh key", (err, decoded) => {
         console.log(decoded)
         if (err) reject(err);
         else if(!decoded) {reject(new Error("user is not authorized"));
