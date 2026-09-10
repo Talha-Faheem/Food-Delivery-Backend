@@ -13,6 +13,7 @@ import AdddressRoutes from "./routers/AdddressRoutes.ts";
 import CategoryRouter from "./routers/CategoryRouter.ts";
 import itemRoutes from "./routers/itemRoutes.ts";
 import OrderRouter from "./routers/OrderRouter.ts";
+import { Redis } from "./Utils/Redis.ts";
 export class Server {
   public app: express.Application = express();
 
@@ -27,9 +28,12 @@ export class Server {
    this.configmongo()
    this.configParser()
    this.configCors()
+   this.connectredis()
   }
 
-  
+  connectredis(){
+    Redis.connectToRedis()
+  }
   configCors(){
     this.app.use(cors())
   }

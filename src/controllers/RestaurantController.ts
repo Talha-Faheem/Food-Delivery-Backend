@@ -105,13 +105,7 @@ export class RestaurantController {
         status: "active",
         name:{$regex: data.name,$options:'$i'},
         location: {
-          // $nearSphere:{
-          //   $geometery:{
-          //     type:'Point',
-          //     coordinates:[parseFloat(data.lng),parseFloat(data.lat)]
-          //   },
-          // $maxDistance:parseFloat(radius)*METER_PER_KM
-          // }
+          
           $geoWithin: {
             $centerSphere: [
               [parseFloat(data.lng), parseFloat(data.lat)],
