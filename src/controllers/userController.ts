@@ -84,10 +84,21 @@ export class UserController {
         const token = Utils.JwtToken(payload,payload.user_id);
       const Refershtoken = Utils.JwtRefreshToken(payload,payload.user_id);
 
+      const user_data={
+        email:user.email,
+        email_verified:user.email_verified,
+        phone:user.phone,
+        name:user.name,
+        type:user.type,
+        status:user.status,
+        created_at:user.created_at,
+        updated_at:user.updated_at,
+      }
+
       res.json({
         token: token,
         Refershtoken,
-        user: user,
+        user: user_data,
       });
     } catch (e) {
       next(e);
@@ -110,7 +121,14 @@ export class UserController {
           updated_at: new Date(),
         },
         {
-          returnDocument: "after",
+          new:true,
+          projection:{
+            verfication_token:0,
+            verfication_token_time:0,
+            password:0,
+            reset_password_token:0,
+            __v:0,
+          }
         },
       );
       if (users) {
