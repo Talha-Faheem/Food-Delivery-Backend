@@ -32,6 +32,19 @@ export class GloabalMiddleware{
     
     }
 
+    static async decodedRefreshToken(req:Request,res:Response,next:NextFunction){
+        const refreshtoken=req.body.refreshToken
+        try{
+            if(!refreshtoken){
+                next(new Error('Access is forbidden! User not exist'))
+            }
+            const decoded=await Utils.jwtRefreshverify(refreshtoken)
+            req.user=decoded
+            next()
+        }catch(e){
+            next(e)
+        }
+    }
     static async adminRole(req:Request,res:Response,next:NextFunction){
         const user=req.user;
         if(user.type!=='admin'){

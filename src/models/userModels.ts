@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema({
   reset_password_token_time: { type: Date,  },
   type: { type: String, required: true },
   status: { type: String, required: true },
-  created_at: { type: String, required: true, default: new Date() },
+  created_at: { type: String, required: true, default: new Date().toLocaleString('en-US',{
+    timeZone:'Asia/Islambad'
+  }) },
   updated_at: { type: String, required: true, default: new Date() },
 
 });

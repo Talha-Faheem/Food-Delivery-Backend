@@ -24,6 +24,7 @@ getRoutes(){
 postRoutes(){
     this.router.post("/signup",Uservalidater.signup(),GloabalMiddleware.checkError,UserController.signup)
     this.router.post("/Refresh_token",Uservalidater.checkRefreshToken(),GloabalMiddleware.checkError,UserController.getNewToken)
+    this.router.post("/logout",GloabalMiddleware.auth,GloabalMiddleware.decodedRefreshToken,GloabalMiddleware.checkError,UserController.logout)
 
 }
 putRoutes(){}

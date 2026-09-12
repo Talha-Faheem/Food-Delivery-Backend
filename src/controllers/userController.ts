@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/userModels";
 import { Nodemailer } from "../Utils/NodeMailer";
+import { Redis } from "../Utils/Redis";
 import { Utils } from "../Utils/Utils";
 
 declare global {
@@ -349,6 +350,23 @@ export class UserController {
           refreshToken:refresh_token,
         
         })
+      }else{
+        throw('Access is forbidden')
+      }
+    }catch(e){
+      next(e)
+    }
+  }
+
+
+  static async logout(req: Request, res: Response, next: NextFunction){
+    const refresh_token=req.body.refreshToken
+    const decoded_data=req.user
+
+    try{
+      if(decoded_data){
+        await Redis.delvalue(decoded_data.aud)
+        res.json({success:true})
       }else{
         throw('Access is forbidden')
       }
